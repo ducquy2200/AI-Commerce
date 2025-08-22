@@ -1,0 +1,12 @@
+services:
+  # Backend API
+  - type: web
+    name: ai-commerce-api
+    env: docker
+    dockerfilePath: ./Dockerfile.production
+    envVars:
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: PORT
+        value: 8000
+    healthCheckPath: /health

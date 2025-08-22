@@ -1,0 +1,35 @@
+version: '3.13'
+
+services:
+  api-gateway:
+    image: ai-commerce-agent:latest
+    ports:
+      - "80:8000"
+    environment:
+      - API_HOST=0.0.0.0
+      - API_PORT=8000
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - CHROMA_PERSIST_DIRECTORY=/app/chroma_db
+      - DEBUG=false
+    volumes:
+      # Only mount persistent data
+      - chroma_data:/app/chroma_db
+    restart: always
+    networks:
+      - agent-network
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '1'
+          memory: 1G
+
+networks:
+  agent-network:
+    driver: bridge
+
+volumes:
+  chroma_data:
+    driver: local

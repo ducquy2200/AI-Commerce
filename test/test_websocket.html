@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebSocket Test</title>
+</head>
+<body>
+    <h1>AI Commerce Agent WebSocket Test</h1>
+    <div id="messages"></div>
+    <input type="text" id="messageInput" placeholder="Type a message...">
+    <button onclick="sendMessage()">Send</button>
+
+    <script>
+        const ws = new WebSocket('ws://localhost:8000/ws/browser-client');
+        const messagesDiv = document.getElementById('messages');
+
+        ws.onopen = function(event) {
+            console.log('Connected to WebSocket');
+            messagesDiv.innerHTML += '<p>Connected to server</p>';
+        };
+
+        ws.onmessage = function(event) {
+            const message = JSON.parse(event.data);
+            messagesDiv.innerHTML += `<p>Server: ${JSON.stringify(message)}</p>`;
+        };
+
+        ws.onerror = function(error) {
+            console.error('WebSocket error:', error);
+            messagesDiv.innerHTML += '<p>Error occurred</p>';
+        };
+
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = {
+                type: 'chat',
+                data: {
+                    message: input.value,
+                    timestamp: new Date().toISOString()
+                }
+            };
+            ws.send(JSON.stringify(message));
+            messagesDiv.innerHTML += `<p>You: ${input.value}</p>`;
+            input.value = '';
+        }
+    </script>
+</body>
+</html>

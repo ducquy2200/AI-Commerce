@@ -1,0 +1,44 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+venv/
+env/
+
+# Frontend development
+frontend/node_modules/
+frontend/.next/
+frontend/build/
+frontend/dist/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Local data
+*.pkl
+*.db
+*.sqlite
+
+# Logs
+*.log
+
+# Environment
+.env.local
+.env.development
+
+# But include
+!.env.production
+!requirements.txt
