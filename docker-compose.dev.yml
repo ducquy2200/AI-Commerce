@@ -11,13 +11,13 @@ services:
       - API_HOST=0.0.0.0
       - API_PORT=8000
       - OPENAI_API_KEY=${OPENAI_API_KEY}
-      - CHROMA_PERSIST_DIRECTORY=/app/chroma_db
+      - CHROMA_PERSIST_DIRECTORY=/chroma_db
       - DEBUG=true
     volumes:
       # Mount source code for hot reloading
-      - ./app:/app/app
-      - ./chroma_db:/app/chroma_db
-      - ./.env:/app/.env
+      - ./app:/app
+      - ./chroma_db:/chroma_db
+      - ./.env:/.env
       # Exclude pycache
       - /app/app/__pycache__
     command: python -u run.py
