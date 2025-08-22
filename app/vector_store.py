@@ -194,3 +194,63 @@ class ProductVectorStore:
             # Fallback to random products
             random_products = self.dataset_loader.get_random_products(n_results)
             return [self.dataset_loader.get_product_with_base64_image(p) for p in random_products]
+        
+    def add_products_with_images(self, products: List[Dict]):
+        """Add products with both text and image embeddings"""
+        text_documents = []
+        text_metadatas = []
+        text_ids = []
+        
+        image_embeddings = []
+        image_metadatas = []
+        image_ids = []
+        
+        for product in products:
+            # Prepare text data
+            features_text = ' '.join(product.get('features', []))
+            doc = f"{product['name']} {product['description']} {product['category']} {features_text}"
+            text_documents.append(doc)
+            
+            # Prepare metadata
+            metadata = {
+                'id': product['id'],
+                'name': product['name'],
+                'description': product['description'],
+                'price': product['price'],
+                'category': product['category'],
+                'in_stock': product.get('in_stock', True),
+                'features': json.dumps(product.get('features', [])),
+                'image_url': product.get('image_url', '')
+            }
+            
+            text_metadatas.append(metadata.copy())
+            text_ids.append(product['id'])
+            
+            # Generate image embedding if image description is provided
+            if product.get('image_description'):
+                try:
+                    # Use CLIP to generate embedding from text description
+                    embedding = self.image_processor.get_text_embedding(product['image_description'])
+                    image_embeddings.append(embedding)
+                    image_metadatas.append(metadata.copy())
+                    image_ids.append(f"{product['id']}_img")
+                except Exception as e:
+                    logger.error(f"Error generating image embedding for {product['id']}: {e}")
+        
+        # Add to text collection
+        if text_documents:
+            self.text_collection.add(
+                documents=text_documents,
+                metadatas=text_metadatas,
+                ids=text_ids
+            )
+            logger.info(f"Added {len(text_documents)} products to text collection")
+        
+        # Add to image collection
+        if image_embeddings:
+            self.image_collection.add(
+                embeddings=image_embeddings,
+                metadatas=image_metadatas,
+                ids=image_ids
+            )
+            logger.info(f"Added {len(image_embeddings)} products to image collection")
