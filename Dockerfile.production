@@ -37,6 +37,7 @@ RUN chmod +x docker-entrypoint.sh
 RUN mkdir -p chroma_db hf_cache
 
 # Set environment variables
+ENV PATH=/root/.local/bin:$PATH
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONDONTWRITEBYTECODE=1
 
