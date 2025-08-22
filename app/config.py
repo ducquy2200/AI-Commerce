@@ -1,6 +1,8 @@
 from pydantic_settings import BaseSettings
 from functools import lru_cache
 from typing import Optional
+from typing import List
+import json
 
 class Settings(BaseSettings):
     app_name: str = "AI Commerce Agent"
@@ -35,12 +37,28 @@ class Settings(BaseSettings):
     
     # API Gateway URL (for callbacks)
     api_gateway_url: str = "http://localhost:8000"
+
+    @property
+    def cors_origins(self) -> List[str]:
+        """Parse CORS origins from string"""
+        try:
+            if self.cors_origins_str:
+                return json.loads(self.cors_origins_str)
+            return ["*"]
+        except:
+            # If parsing fails, return safe default
+            return ["*"]
     
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"
         case_sensitive = False
         extra = "allow"
+
+        # Map environment variables
+        fields = {
+            "cors_origins_str": {"env": "CORS_ORIGINS"}
+        }
 
 @lru_cache()
 def get_settings():
