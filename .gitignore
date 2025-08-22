@@ -3,3 +3,4 @@ app/__pycache__
 chroma_db
 hf_cache
 venv
+ngrok.yml
