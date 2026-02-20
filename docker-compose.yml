@@ -25,6 +25,30 @@ services:
       retries: 3
       start_period: 40s
 
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    profiles:
+      - tunnel
+    restart: unless-stopped
+    depends_on:
+      api-gateway:
+        condition: service_healthy
+    environment:
+      CF_TUNNEL_ID: ${CF_TUNNEL_ID:-}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ${CF_TUNNEL_CREDENTIALS_PATH:-./cloudflared/tunnel-credentials.json}:/etc/cloudflared/tunnel-credentials.json:ro
+    command:
+      - --no-autoupdate
+      - tunnel
+      - run
+      - --credentials-file
+      - /etc/cloudflared/tunnel-credentials.json
+      - ${CF_TUNNEL_ID}
+    networks:
+      - agent-network
+
 networks:
   agent-network:
     driver: bridge
@@ -32,3 +56,5 @@ networks:
 volumes:
   chroma_db:
     driver: local
+
+

@@ -4,4 +4,3 @@ chroma_db
 hf_cache
 venv
 ngrok.yml
-cloudflared-tunnel.ps1

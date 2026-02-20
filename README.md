@@ -382,3 +382,32 @@ All endpoints are listed in http://localhost:8000/docs (OpenAPI-based)
 ```
 
 The mock data is pulled from https://huggingface.co/datasets/ashraq/fashion-product-images-small
+
+## Cloudflare Tunnel In Docker (No Background PowerShell Needed)
+
+You can now run `cloudflared` as a Docker service in this repo, similar to Page-Proof-QA.
+
+### Required `.env` variables
+
+```dotenv
+CF_TUNNEL_ID=<your-tunnel-uuid>
+CF_TUNNEL_CREDENTIALS_PATH=C:/Users/<you>/.cloudflared/<your-tunnel-uuid>.json
+```
+
+### Run with tunnel profile
+
+```powershell
+docker compose --env-file .env -f docker-compose.yml --profile tunnel up -d --build
+```
+
+### Helper script
+
+```powershell
+.\cloudflared-tunnel.ps1          # start stack + cloudflared profile
+.\cloudflared-tunnel.ps1 -Logs    # tail cloudflared logs
+.\cloudflared-tunnel.ps1 -Down    # stop stack + cloudflared
+```
+
+Notes:
+- This mode does not require keeping a PowerShell terminal open for `cloudflared tunnel run`.
+- Tunnel ingress/hostnames are expected to be managed in Cloudflare for this named tunnel.
