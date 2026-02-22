@@ -13,6 +13,9 @@
 
 The AI Commerce Assistant backend is a FastAPI-based service that provides an intelligent shopping assistant powered by LangChain and OpenAI's GPT-4. It offers natural language product search, image-based similarity search, and conversational commerce capabilities.
 
+## Live Demo
+- App: https://ai-commerce.quyducdo.com
+
 ### Key Features
 - 🤖 **AI-Powered Chat**: Natural language understanding using GPT-4
 - 🔍 **Semantic Search**: Vector-based product search using ChromaDB
